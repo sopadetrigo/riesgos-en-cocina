@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="Miguel Santillan">
+<meta name="description" content="Biblioteca documental interactiva sobre riesgos en cocina. Autor intelectual: Miguel Santillan.">
+<title>Archivo · Riesgos en Cocina</title>
+<style>
+:root{
+  --bg:#f3f1eb; --panel:#fffdf8; --ink:#242521; --muted:#6f7069;
+  --line:#d9d7cf; --accent:#394b3f; --accent-soft:#e7eee8;
+  --gold:#a47b3d; --danger:#8b3a32; --shadow:0 10px 30px rgba(40,40,30,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.shell{max-width:1380px;margin:auto;padding:0 22px}
+.hero{background:linear-gradient(135deg,#29392f,#43584a);color:#fff;padding:34px 0 28px}
+.hero-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(30px,5vw,48px);line-height:1.03;margin:7px 0}
+.hero p{margin:8px 0 0;color:#dfe7e1;max-width:720px}
+.signature{font-family:Georgia,serif;font-size:14px;color:#e8dfce;text-align:right;white-space:nowrap}
+.signature strong{display:block;font-size:16px;font-weight:500}
+.searchbar{display:flex;gap:9px;margin-top:24px}
+.searchbar input{flex:1;min-width:0;padding:14px 16px;border:1px solid rgba(255,255,255,.22);border-radius:12px;background:#fff;color:var(--ink);outline:none}
+.searchbar button{border:1px solid rgba(255,255,255,.2);background:#fff;color:var(--accent);border-radius:12px;padding:0 16px;font-weight:650}
+.nav{background:rgba(255,255,255,.06);margin-top:18px;border-top:1px solid rgba(255,255,255,.1);padding-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.nav button{border:0;background:transparent;color:#dfe7e1;padding:7px 10px;border-radius:8px}
+.nav button.active,.nav button:hover{background:rgba(255,255,255,.12);color:#fff}
+main{padding:22px 0 45px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:var(--shadow)}
+.stat .n{font-size:25px;font-weight:700;color:var(--accent)}
+.stat .l{font-size:12px;color:var(--muted);margin-top:3px}
+.workspace{display:grid;grid-template-columns:250px 1fr;gap:16px}
+.side,.main,.reader{background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.side{padding:14px;height:max-content;position:sticky;top:16px}
+.side h2,.side h3{font-size:13px;margin:4px 0 10px}
+.side h3{margin-top:20px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.filter{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;border:0;background:transparent;padding:8px 9px;border-radius:9px;color:var(--ink)}
+.filter:hover,.filter.active{background:var(--accent-soft);color:var(--accent)}
+.count{font-size:11px;color:var(--muted)}
+.mini-list{display:grid;gap:5px}
+.mini{width:100%;border:0;background:transparent;text-align:left;padding:8px 9px;border-radius:9px;color:var(--ink);font-size:12px}
+.mini:hover{background:#efeee8}
+.main{padding:16px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.status{font-size:13px;color:var(--muted)}
+.sort{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px}
+.doc{border:1px solid var(--line);border-radius:13px;padding:14px;background:#fff;min-height:176px;display:flex;flex-direction:column;transition:.15s}
+.doc:hover{border-color:#9ca99f;transform:translateY(-1px)}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:10px;padding:4px 7px;border-radius:999px}
+.badge.type{background:#f0eee7;color:#6d634f}
+.doc h3{font-family:Georgia,serif;font-size:17px;font-weight:500;line-height:1.25;margin:0 0 7px}
+.doc p{font-size:12px;color:var(--muted);margin:0 0 9px;line-height:1.4}
+.doc small{margin-top:auto;color:#8a8a82;font-size:10px;line-height:1.35}
+.doc-actions{display:flex;gap:6px;margin-top:11px}
+.action{border:1px solid var(--line);background:#fff;padding:6px 8px;border-radius:8px;font-size:11px}
+.action.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.star{margin-left:auto;border:0;background:transparent;font-size:17px;color:#999}
+.star.on{color:var(--gold)}
+.empty{padding:50px 20px;text-align:center;color:var(--muted)}
+.reader{margin-top:16px;padding:22px;display:none}
+.reader.open{display:block}
+.reader-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}
+.reader h2{font-family:Georgia,serif;font-weight:500;font-size:28px;margin:0 0 6px}
+.meta{color:var(--muted);font-size:12px;line-height:1.5}
+.reader-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.content{margin-top:18px;border-top:1px solid var(--line);padding-top:18px;white-space:pre-wrap;line-height:1.62;font-size:14px;max-height:680px;overflow:auto}
+.content mark{background:#e9dfbd;padding:0 2px}
+.close{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px}
+.related{border-top:1px solid var(--line);margin-top:20px;padding-top:16px}
+.related h3{font-size:13px;margin:0 0 9px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.related button{border:1px solid var(--line);background:#fff;text-align:left;padding:10px;border-radius:10px}
+.related button:hover{background:#f0eee8}
+footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--muted);font-size:11px}
+.footer-sign{font-family:Georgia,serif;color:#5d625b;font-size:13px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.side{position:static}.side-content{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side h3{margin-top:4px}}
+@media(max-width:560px){.shell{padding:0 12px}.hero{padding-top:25px}.hero-top{display:block}.signature{text-align:left;margin-top:13px}.searchbar{flex-direction:column}.searchbar button{height:44px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.toolbar{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="shell">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">Archivo documental · gastronomía y prevención</div>
+        <h1>Riesgos en Cocina</h1>
+        <p>Una biblioteca local para consultar, relacionar y estudiar el conocimiento reunido en tu proyecto.</p>
+      </div>
+      <div class="signature">Autor intelectual<strong>Miguel Santillan</strong></div>
+    </div>
+    <div class="searchbar">
+      <input id="q" aria-label="Buscar en la biblioteca" placeholder="Buscar en títulos, rutas y contenido…">
+      <button id="clear">Limpiar</button>
+    </div>
+    <nav class="nav" aria-label="Navegación">
+      <button class="active" data-view="all">Explorar</button>
+      <button data-view="favorites">Favoritos</button>
+      <button data-view="recent">Recientes</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="shell">
+  <section class="stats" aria-label="Resumen">
+    <div class="stat"><div class="n" id="sDocs">—</div><div class="l">documentos</div></div>
+    <div class="stat"><div class="n" id="sCats">—</div><div class="l">colecciones</div></div>
+    <div class="stat"><div class="n" id="sTypes">—</div><div class="l">formatos</div></div>
+    <div class="stat"><div class="n" id="sFav">0</div><div class="l">guardados</div></div>
+  </section>
+
+  <div class="workspace">
+    <aside class="side">
+      <div class="side-content">
+        <section>
+          <h2>Colecciones</h2>
+          <div id="filters"></div>
+        </section>
+        <section>
+          <h3>Formatos</h3>
+          <div id="types"></div>
+        </section>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="toolbar">
+        <div id="status" class="status">Cargando biblioteca…</div>
+        <select id="sort" class="sort" aria-label="Ordenar documentos">
+          <option value="title">Título</option>
+          <option value="category">Colección</option>
+          <option value="type">Formato</option>
+        </select>
+      </div>
+      <div id="grid" class="grid"></div>
+    </section>
+  </div>
+
+  <section id="reader" class="reader" aria-live="polite">
+    <div class="reader-head">
+      <div>
+        <h2 id="rtitle"></h2>
+        <div id="rmeta" class="meta"></div>
+        <div class="reader-tools">
+          <button id="favReader" class="action">☆ Guardar</button>
+          <a id="openfile" class="action primary" target="_blank">Abrir original</a>
+        </div>
+      </div>
+      <button id="close" class="close">Cerrar</button>
+    </div>
+    <div id="rcontent" class="content"></div>
+    <div class="related">
+      <h3>También puede interesarte</h3>
+      <div id="relatedGrid" class="related-grid"></div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="footer-sign">Riesgos en Cocina · Miguel Santillan</div>
+    <div>Archivo local construido a partir del corpus documental proporcionado. La interfaz es una capa de consulta y no altera los documentos originales.</div>
+  </div>
+</footer>
+
+<script>
+let docs=[], filtered=[], active='Todas', view='all', currentId=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const storeKey='riesgos-cocina-miguel-santillan';
+let state=JSON.parse(localStorage.getItem(storeKey)||'{"favorites":[],"recent":[]}');
+
+function saveState(){localStorage.setItem(storeKey,JSON.stringify(state));updateFavCount();}
+function updateFavCount(){$('sFav').textContent=state.favorites.length}
+function isFav(id){return state.favorites.includes(id)}
+function toggleFav(id){
+  if(isFav(id)) state.favorites=state.favorites.filter(x=>x!==id);
+  else state.favorites.unshift(id);
+  state.favorites=state.favorites.slice(0,100); saveState(); render();
+  if(currentId===id) $('favReader').textContent=isFav(id)?'★ Guardado':'☆ Guardar';
+}
+function addRecent(id){
+  state.recent=[id,...state.recent.filter(x=>x!==id)].slice(0,20); saveState();
+}
+
+function buildFilters(){
+  const cats=new Map(), types=new Map();
+  docs.forEach(d=>{cats.set(d.category,(cats.get(d.category)||0)+1);types.set(d.type,(types.get(d.type)||0)+1)});
+  const arr=[['Todas',docs.length],...Array.from(cats.entries()).sort((a,b)=>a[0].localeCompare(b[0],'es'))];
+  $('filters').innerHTML=arr.map(([c,n])=>`<button class="filter ${c===active?'active':''}" data-cat="${esc(c)}"><span>${esc(c)}</span><span class="count">${n}</span></button>`).join('');
+  document.querySelectorAll('[data-cat]').forEach(b=>b.addEventListener('click',()=>{active=b.dataset.cat;view='all';setViewButton('all');buildFilters();render()}));
+  const ta=[...types.entries()].sort();
+  $('types').innerHTML=ta.map(([t,n])=>`<button class="filter" data-type="${esc(t)}"><span>${esc(t)}</span><span class="count">${n}</span></button>`).join('');
+  document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{active='Todas';view='all';setViewButton('all');render(b.dataset.type)}));
+}
+
+function setViewButton(v){
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.view;setViewButton(view);render()}));
+
+function matches(d,q){
+  if(!q) return true;
+  return (d.title+' '+d.displayPath+' '+d.category+' '+d.type+' '+(d.content||'')).toLowerCase().includes(q);
+}
+
+function render(typeFilter=null){
+  const q=$('q').value.trim().toLowerCase();
+  filtered=docs.filter(d=>
+    (active==='Todas'||d.category===active) &&
+    (!typeFilter||d.type===typeFilter) &&
+    matches(d,q) &&
+    (view==='all'||(view==='favorites'&&isFav(d.id))||(view==='recent'&&state.recent.includes(d.id)))
+  );
+  const key=$('sort').value;
+  filtered.sort((a,b)=>String(a[key]||'').localeCompare(String(b[key]||''),'es'));
+  $('status').textContent=`${filtered.length} ${filtered.length===1?'documento':'documentos'} · ${view==='favorites'?'guardados':view==='recent'?'consultados recientemente':'en la vista actual'}`;
+  $('grid').innerHTML=filtered.slice(0,300).map(d=>`
+    <article class="doc">
+      <div class="badges"><span class="badge">${esc(d.category)}</span><span class="badge type">${esc(d.type)}</span>
+      <button class="star ${isFav(d.id)?'on':''}" data-star="${d.id}" aria-label="${isFav(d.id)?'Quitar de favoritos':'Guardar en favoritos'}">${isFav(d.id)?'★':'☆'}</button></div>
+      <h3>${esc(d.title)}</h3>
+      <p>${esc(d.displayPath)}</p>
+      <small>Firma del proyecto: Miguel Santillan</small>
+      <div class="doc-actions"><button class="action primary" data-open="${d.id}">Leer</button><button class="action" data-original="${d.id}">Original</button></div>
+    </article>`).join('')||'<div class="empty">No se encontraron documentos con estos criterios.</div>';
+
+  document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDoc(+b.dataset.open)));
+  document.querySelectorAll('[data-original]').forEach(b=>b.addEventListener('click',()=>openOriginal(+b.dataset.original)));
+  document.querySelectorAll('[data-star]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();toggleFav(+b.dataset.star)}));
+}
+
+function highlight(text,q){
+  if(!q) return esc(text);
+  const safe=esc(text), parts=q.split(/\s+/).filter(Boolean).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  if(!parts.length)return safe;
+  return safe.replace(new RegExp('('+parts.join('|')+')','gi'),'<mark>$1</mark>');
+}
+
+function openOriginal(id){
+  const d=docs.find(x=>x.id===id); if(!d)return;
+  location.href='documentos/'+d.path.split('/').map(encodeURIComponent).join('/');
+}
+
+function openDoc(id){
+  const d=docs.find(x=>x.id===id); if(!d)return;
+  currentId=id; addRecent(id);
+  $('rtitle').textContent=d.title;
+  $('rmeta').textContent=`${d.type} · ${d.category} · ${d.displayPath} · Autor intelectual del archivo: Miguel Santillan`;
+  $('favReader').textContent=isFav(id)?'★ Guardado':'☆ Guardar';
+  $('favReader').onclick=()=>toggleFav(id);
+  $('openfile').href='documentos/'+d.path.split('/').map(encodeURIComponent).join('/');
+  const q=$('q').value.trim();
+  $('rcontent').innerHTML=highlight((d.content||'').trim()||'Este archivo no contiene texto extraíble en el índice. Puedes abrir el original.',q);
+  buildRelated(d);
+  $('reader').classList.add('open');
+  $('reader').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function buildRelated(d){
+  const terms=(d.title+' '+d.category).toLowerCase().split(/[\s\-_/]+/).filter(x=>x.length>4);
+  const scored=docs.filter(x=>x.id!==d.id).map(x=>{
+    const hay=(x.title+' '+x.category).toLowerCase();
+    const score=terms.reduce((n,t)=>n+(hay.includes(t)?1:0),0)+(x.category===d.category?3:0);
+    return {x,score};
+  }).sort((a,b)=>b.score-a.score).slice(0,5).filter(x=>x.score>0);
+  $('relatedGrid').innerHTML=scored.map(({x})=>`<button data-related="${x.id}"><strong>${esc(x.title)}</strong><br><span class="meta">${esc(x.category)}</span></button>`).join('')||'<span class="meta">No hay relaciones suficientes para sugerir documentos.</span>';
+  document.querySelectorAll('[data-related]').forEach(b=>b.addEventListener('click',()=>openDoc(+b.dataset.related)));
+}
+
+$('q').addEventListener('input',()=>render());
+$('clear').addEventListener('click',()=>{$('q').value='';render()});
+$('sort').addEventListener('change',()=>render());
+$('close').addEventListener('click',()=>{$('reader').classList.remove('open');currentId=null});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/' && document.activeElement!==$('q')){e.preventDefault();$('q').focus()}
+  if(e.key==='Escape'){$('reader').classList.remove('open');$('q').blur()}
+});
+
+Promise.all([fetch('data.json').then(r=>r.json())]).then(([x])=>{
+  docs=x;
+  $('sDocs').textContent=docs.length.toLocaleString('es-MX');
+  $('sCats').textContent=new Set(docs.map(d=>d.category)).size;
+  $('sTypes').textContent=new Set(docs.map(d=>d.type)).size;
+  updateFavCount(); buildFilters(); render();
+}).catch(()=>{
+  $('status').textContent='No se pudo cargar la biblioteca';
+  $('grid').innerHTML='<div class="empty">Ejecuta la biblioteca con <strong>python3 app.py</strong> para que data.json pueda cargarse correctamente.</div>';
+});
+</script>
+</body>
+</html>
